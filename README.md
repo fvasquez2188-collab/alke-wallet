@@ -3,6 +3,8 @@
 Alke Wallet es una aplicación **frontend** que simula el funcionamiento de una billetera digital (e-wallet), permitiendo a los usuarios gestionar su saldo, realizar depósitos, enviar dinero y visualizar un historial de transacciones.  
 El proyecto fue desarrollado como parte de una **Evaluación Integradora**, aplicando buenas prácticas de desarrollo web y control de versiones.
 
+link: https://github.com/fvasquez2188-collab/alke-wallet.git
+
 ---
 
 ## 🎯 Objetivo del proyecto
