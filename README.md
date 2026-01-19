@@ -47,6 +47,6 @@ Desarrollar una interfaz web dinámica y responsive que permita simular las func
 
 ---
 
-## 📂 Estructura del proyecto
+
 
 
