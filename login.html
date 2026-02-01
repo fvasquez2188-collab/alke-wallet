@@ -5,102 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wallet | Login</title>
 
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- CSS propio -->
-  <link rel="stylesheet" href="style_propio.css">
+  <link rel="stylesheet" href="assets/css/style_propio.css">
 </head>
 
 <body>
 <main class="container page-center">
   <section class="row justify-content-center w-100">
     <section class="col-12 col-sm-10 col-md-6 col-lg-4">
-
       <section class="card shadow">
         <section class="card-body">
-
           <h2 class="text-center mb-4">Iniciar sesión</h2>
-
-          <!-- ALERTAS -->
           <div id="alertContainer"></div>
 
           <form id="loginForm">
             <div class="mb-3">
-              <label class="form-label">Email</label>
+              <label>Email</label>
               <input type="email" id="email" class="form-control" required>
             </div>
-
             <div class="mb-3">
-              <label class="form-label">Password</label>
+              <label>Password</label>
               <input type="password" id="password" class="form-control" required>
             </div>
-
             <button class="btn btn-primary w-100">Ingresar</button>
           </form>
-
         </section>
       </section>
-
     </section>
   </section>
 </main>
 
-<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Script Login con jQuery -->
-<script>
-$(document).ready(function () {
-
-  const USER_EMAIL = "tucorreo@email.com";
-  const USER_PASSWORD = "1234";
-
-  // Manejo del submit con jQuery
-  $('#loginForm').submit(function (e) {
-    e.preventDefault();
-
-    const email = $('#email').val();
-    const password = $('#password').val();
-
-    if (email === USER_EMAIL && password === USER_PASSWORD) {
-
-      if (!localStorage.getItem("saldo")) {
-        localStorage.setItem("saldo", "350000");
-      }
-
-      mostrarAlerta(
-        "Inicio de sesión exitoso. Redirigiendo...",
-        "success"
-      );
-
-      // Redirección con jQuery
-      setTimeout(() => {
-        $(location).attr('href', 'menu1.html');
-      }, 1500);
-
-    } else {
-      mostrarAlerta(
-        "Correo o contraseña incorrectos",
-        "danger"
-      );
-    }
-  });
-
-  // Función de alertas Bootstrap
-  function mostrarAlerta(mensaje, tipo) {
-    $('#alertContainer').html(`
-      <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
-        ${mensaje}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    `);
-  }
-
-});
-</script>
+<script src="assets/js/auth.js"></script>
 </body>
 </html>
+

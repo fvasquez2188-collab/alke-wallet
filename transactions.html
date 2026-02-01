@@ -5,42 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wallet | Movimientos</title>
 
-  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style_propio.css">
+  <link rel="stylesheet" href="assets/css/style_propio.css">
 </head>
 
 <body>
 <main class="container py-4 page-center">
   <section class="row justify-content-center w-100">
     <section class="col-12 col-md-8">
-
       <section class="card shadow">
         <section class="card-body">
 
-          <h2 class="text-center mb-3">Últimos movimientos</h2>
+          <h2 class="text-center">Movimientos</h2>
 
-          <section class="mb-3">
-            <select id="filterType" class="form-select">
-              <option value="all">Todos</option>
-              <option value="deposit">Depósitos</option>
-              <option value="transfer">Transferencias</option>
-            </select>
-          </section>
+          <select id="filterType" class="form-select mb-3">
+            <option value="all">Todos</option>
+            <option value="deposit">Depósitos</option>
+            <option value="transfer">Transferencias</option>
+          </select>
 
-          <section>
-            <ul id="transactionList" class="list-group mb-3"></ul>
-          </section>
+          <ul id="transactionList" class="list-group mb-3"></ul>
 
-          <section class="d-flex justify-content-between mb-3">
-            <button id="prevPage" class="btn btn-outline-primary btn-sm">
-              ◀ Anterior
-            </button>
-            <span id="pageInfo" class="align-self-center text-muted"></span>
-            <button id="nextPage" class="btn btn-outline-primary btn-sm">
-              Siguiente ▶
-            </button>
-          </section>
+          <div class="d-flex justify-content-between mb-3">
+            <button id="prevPage" class="btn btn-outline-primary btn-sm">◀</button>
+            <span id="pageInfo"></span>
+            <button id="nextPage" class="btn btn-outline-primary btn-sm">▶</button>
+          </div>
 
           <button id="btnBackMenu" class="btn btn-outline-secondary w-100">
             Volver
@@ -48,181 +38,29 @@
 
         </section>
       </section>
-
     </section>
   </section>
+</main>
 
-<!-- MODAL CONFIRMACIÓN -->
+<!-- Modal confirmación -->
 <div class="modal fade" id="confirmModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-
       <div class="modal-header">
         <h5 class="modal-title">Confirmación</h5>
         <button class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-
-      <div class="modal-body text-center" id="confirmMessage">
-        ¿Deseas continuar?
-      </div>
-
+      <div class="modal-body text-center" id="confirmMessage"></div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">
-          Cancelar
-        </button>
-        <button class="btn btn-primary" id="confirmActionBtn">
-          Confirmar
-        </button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" id="confirmActionBtn">Confirmar</button>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-/* ===============================
-   CONFIGURACIÓN
-=============================== */
-const ITEMS_PER_PAGE = 6;
-let currentPage = 1;
-
-/* ===============================
-   ELEMENTOS
-=============================== */
-const list = document.getElementById("transactionList");
-const filterSelect = document.getElementById("filterType");
-const prevBtn = document.getElementById("prevPage");
-const nextBtn = document.getElementById("nextPage");
-const pageInfo = document.getElementById("pageInfo");
-const backBtn = document.getElementById("btnBackMenu");
-
-/* ===============================
-   MODAL CONFIRMACIÓN
-=============================== */
-const confirmModal = new bootstrap.Modal(document.getElementById("confirmModal"));
-const modalMsg = document.getElementById("confirmMessage");
-const confirmBtn = document.getElementById("confirmActionBtn");
-
-let accionConfirmada = null;
-
-function mostrarConfirmacion(msg, accion) {
-  modalMsg.textContent = msg;
-  accionConfirmada = accion;
-  confirmModal.show();
-}
-
-confirmBtn.addEventListener("click", () => {
-  confirmModal.hide();
-  if (typeof accionConfirmada === "function") {
-    accionConfirmada();
-  }
-  accionConfirmada = null;
-});
-
-/* ===============================
-   DATOS
-=============================== */
-function obtenerMovimientos() {
-  try {
-    return JSON.parse(localStorage.getItem("transactions")) || [];
-  } catch {
-    return [];
-  }
-}
-
-function aplicarFiltro(transactions) {
-  const filtro = filterSelect.value;
-
-  return transactions.filter(t => {
-    if (filtro === "deposit") {
-      return t.desc.toLowerCase().includes("depósito");
-    }
-    if (filtro === "transfer") {
-      return t.desc.toLowerCase().includes("transferencia");
-    }
-    return true;
-  });
-}
-
-/* ===============================
-   RENDER
-=============================== */
-function renderMovimientos() {
-  const allTransactions = aplicarFiltro(obtenerMovimientos());
-  const totalPages = Math.max(
-    1,
-    Math.ceil(allTransactions.length / ITEMS_PER_PAGE)
-  );
-
-  if (currentPage > totalPages) {
-    currentPage = totalPages;
-  }
-
-  const start = (currentPage - 1) * ITEMS_PER_PAGE;
-  const end = start + ITEMS_PER_PAGE;
-  const pageItems = allTransactions.slice(start, end);
-
-  list.innerHTML = "";
-
-  if (pageItems.length === 0) {
-    const li = document.createElement("li");
-    li.className = "list-group-item text-center text-muted";
-    li.textContent = "No hay movimientos para este filtro";
-    list.appendChild(li);
-  } else {
-    pageItems.forEach(t => {
-      const li = document.createElement("li");
-      li.className = "list-group-item";
-      li.innerHTML = `
-        <strong>${t.desc}</strong><br>
-        <span>$${Number(t.monto).toLocaleString()}</span>
-        <small class="text-muted d-block">${t.fecha}</small>
-      `;
-      list.appendChild(li);
-    });
-  }
-
-  pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
-
-  prevBtn.disabled = currentPage === 1;
-  nextBtn.disabled = currentPage === totalPages;
-}
-
-/* ===============================
-   EVENTOS
-=============================== */
-filterSelect.addEventListener("change", () => {
-  currentPage = 1;
-  renderMovimientos();
-});
-
-prevBtn.addEventListener("click", () => {
-  if (currentPage > 1) {
-    currentPage--;
-    renderMovimientos();
-  }
-});
-
-nextBtn.addEventListener("click", () => {
-  currentPage++;
-  renderMovimientos();
-});
-
-backBtn.addEventListener("click", () => {
-  mostrarConfirmacion(
-    "¿Deseas volver al menú principal?",
-    () => window.location.href = "menu1.html"
-  );
-});
-
-/* ===============================
-   INIT
-=============================== */
-document.addEventListener("DOMContentLoaded", renderMovimientos);
-</script>
+<script src="assets/js/transactions.js"></script>
 </body>
 </html>
 

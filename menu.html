@@ -3,199 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wallet | Menú Principal</title>
+  <title>Wallet | Menú</title>
 
-  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style_propio.css">
+  <link rel="stylesheet" href="assets/css/style_propio.css">
 </head>
 
 <body>
 <main class="container py-4 page-center">
   <section class="row justify-content-center w-100">
     <section class="col-12 col-md-8 col-lg-6">
-
       <section class="card shadow">
         <section class="card-body text-center">
 
-          <h2 class="mb-3">Menú Principal</h2>
-
-          <h4 class="mb-4">
-            Saldo disponible:
-            <span id="saldo" class="fw-bold">$0</span>
-          </h4>
+          <h2>Menú Principal</h2>
+          <h4 class="mb-4">Saldo: <span id="saldo">$0</span></h4>
 
           <section class="d-grid gap-2">
             <a href="deposit.html" class="btn btn-success nav-confirm"
-               data-msg="¿Desea ir a la pantalla de depósito?">
-              Depositar
-            </a>
+               data-msg="¿Desea ir a depósito?">Depositar</a>
 
             <a href="sendmoney.html" class="btn btn-primary nav-confirm"
-               data-msg="¿Desea ir a la pantalla de transferencias?">
-              Enviar dinero
-            </a>
+               data-msg="¿Desea ir a transferencias?">Enviar dinero</a>
 
             <a href="transactions.html" class="btn btn-secondary nav-confirm"
-               data-msg="¿Desea ver el historial de movimientos?">
-              Movimientos
-            </a>
+               data-msg="¿Desea ver movimientos?">Movimientos</a>
 
             <button id="logoutBtn" class="btn btn-outline-danger"
-                    data-msg="¿Está seguro que desea cerrar sesión?">
-              Cerrar sesión
-            </button>
+                    data-msg="¿Cerrar sesión?">Cerrar sesión</button>
           </section>
 
         </section>
       </section>
-
     </section>
   </section>
 </main>
 
-<!-- MODAL CONFIRMACIÓN REUTILIZABLE -->
+<!-- Modal -->
 <div class="modal fade" id="confirmModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-
       <div class="modal-header">
         <h5 class="modal-title">Confirmación</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-
-      <div class="modal-body text-center" id="confirmMessage">
-        ¿Desea continuar?
-      </div>
-
+      <div class="modal-body text-center" id="confirmMessage"></div>
       <div class="modal-footer">
-        <button type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal">
-          Cancelar
-        </button>
-        <button type="button"
-                class="btn btn-primary"
-                id="confirmActionBtn">
-          Confirmar
-        </button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" id="confirmActionBtn">Confirmar</button>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-/* =====================================================
-   MENU MODULE (MODAL BOOTSTRAP + SALDO CORRECTO)
-===================================================== */
-(() => {
-
-  /* -------------------------------
-     CONSTANTES
-  -------------------------------- */
-  const SALDO_INICIAL = 350000;
-
-  /* -------------------------------
-     ELEMENTOS DOM
-  -------------------------------- */
-  const saldoEl = document.getElementById("saldo");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const navLinks = document.querySelectorAll(".nav-confirm");
-
-  const modalEl = document.getElementById("confirmModal");
-  const modalMsg = document.getElementById("confirmMessage");
-  const confirmBtn = document.getElementById("confirmActionBtn");
-
-  const confirmModal = new bootstrap.Modal(modalEl);
-
-  let accionConfirmada = null;
-
-  /* -------------------------------
-     INIT
-  -------------------------------- */
-  function init() {
-    inicializarSaldo();
-    renderSaldo();
-    bindEventos();
-  }
-
-  /* -------------------------------
-     SALDO
-  -------------------------------- */
-  function inicializarSaldo() {
-    if (!localStorage.getItem("saldo")) {
-      localStorage.setItem("saldo", SALDO_INICIAL);
-    }
-  }
-
-  function obtenerSaldo() {
-    return Number(localStorage.getItem("saldo")) || 0;
-  }
-
-  function renderSaldo() {
-    saldoEl.textContent = `$${obtenerSaldo().toLocaleString()}`;
-  }
-
-  /* -------------------------------
-     EVENTOS
-  -------------------------------- */
-  function bindEventos() {
-
-    navLinks.forEach(link => {
-      link.addEventListener("click", e => {
-        e.preventDefault();
-        mostrarConfirmacion(
-          link.dataset.msg,
-          () => window.location.href = link.getAttribute("href")
-        );
-      });
-    });
-
-    logoutBtn.addEventListener("click", () => {
-      mostrarConfirmacion(
-        logoutBtn.dataset.msg,
-        cerrarSesion
-      );
-    });
-
-    confirmBtn.addEventListener("click", ejecutarAccion);
-  }
-
-  /* -------------------------------
-     MODAL CONFIRMACIÓN
-  -------------------------------- */
-  function mostrarConfirmacion(mensaje, accion) {
-    modalMsg.textContent = mensaje;
-    accionConfirmada = accion;
-    confirmModal.show();
-  }
-
-  function ejecutarAccion() {
-    confirmModal.hide();
-    if (typeof accionConfirmada === "function") {
-      accionConfirmada();
-    }
-    accionConfirmada = null;
-  }
-
-  /* -------------------------------
-     LOGOUT
-  -------------------------------- */
-  function cerrarSesion() {
-    localStorage.removeItem("loggedUser");
-    window.location.href = "login.html";
-  }
-
-  /* -------------------------------
-     START
-  -------------------------------- */
-  init();
-
-})();
-</script>
+<script src="assets/js/menu.js"></script>
 </body>
 </html>
