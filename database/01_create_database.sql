@@ -6,3 +6,4 @@
 CREATE DATABASE AlkeWallet;
 USE AlkeWallet;
 
+
